@@ -14,6 +14,41 @@ function findTag(el, tag){
 		}
 		return null;
 }
+function translateTagToText(tag){
+	let result;
+	switch (tag) {
+		case 'surname':
+			result = 'Прізвище';
+			break;
+		case 'model':
+			result = 'Модлель';
+			break;
+		case 'id':
+			result = 'ID';
+			break;
+		case 'phone_num':
+			result = 'Номер Телефону';
+			break;
+		case 'broke':
+			result = 'Поломка';
+			break;
+		case 'master':
+			result = 'Майстер';
+			break;
+		case 'date':
+			result = 'Дата';
+			break;
+		case 'price':
+			result = 'Ціна';
+			break;
+		default:
+			result = false;
+			break;
+	}
+	return result;
+}
+
+
 
 
 class Main{
@@ -22,7 +57,15 @@ class Main{
       		if (config.hasOwnProperty(key)) {
         		this[key] = config[key];
       		}
-    	}
+		}
+			this.filteradd.submit = (data, e) => {
+				this.fillterpannel.append(data)
+				this.mainfeed.load(this.fillterpannel.getSQL())
+			};
+			this.fillterpannel.deleted = () => {
+				this.mainfeed.load(this.fillterpannel.getSQL())
+			}
+
 	}
 
 }
@@ -45,13 +88,13 @@ class FilterAddPannel{
 		this.load('id')
 		this.submiter_el = document.querySelector(this.submiter); 
 		this.submiter_el.addEventListener('click', e => {
-			let data = this.getData(); 
+			let data = new Filter(this.getData()); 
 			this.submit(data, e)
 		})
 	}
 
 	load(tag){
-			console.log(tag)
+			// console.log(tag)
 		switch (tag) {
 			case 'surname':
 			case 'model':
@@ -82,6 +125,7 @@ class FilterAddPannel{
 				this.clear();
 			break;
 		}
+
 		for(let block of this.blocks){
 				block.init();
 		}
@@ -154,7 +198,7 @@ class FilterAddPannel{
 					</div>
 				</div>
 			`;
-			// $('#'+id+'-input').datepicker({
+			// $('#'+id).datepicker({
 			//   format: 'dd:mm:yyyy',
 			//   days: ['Неділля', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П`ятниця', 'Субота'],
 			//   daysShort: ['Нед','Пон','Вів','Сер','Чет','П`ят','Суб'],
@@ -167,25 +211,55 @@ class FilterAddPannel{
 		let blockID = this.blocks.push(new FilterEditionBlock({
 			el_selector: '#'+id,
 			type: type,
-			slug: slug
+			slug: slug,
 		})) - 1;
+		// console.log(this.blocks[blockID]);
+		
 	}
 	clear(){
+		let main;
 		for(let block of this.blocks){
-			if(block.type != 'main' && block.el != null)  this.filter_wrapper_el.removeChild(block.el);
+			if(block.type != 'main' ){
+				if(block.el != null){
+					try{
+						this.filter_wrapper_el.removeChild(block.el);
+					}catch(erorr){
+						console.error('Ellement already not exist');
+					}
+				}
+			}else{
+				main = block;
+			}
 		}	
+		this.blocks = [main];
+		document.querySelector(this.searchtype).checked = false;
+		this.counter = 1;
 	}
 	submit(data, e){
-		console.log(data, e)
+		console.log(data)
 	}
 	getData(){
 		let res = [];
+		let slugs = [];
+		
 		for(let block of this.blocks){
-			let data = block.getShortData(); 
-			res.push(data);
+			if(block.el !== null && !slugs.includes(block.slug)){
+				let data = block.getShortData(); 
+				res.push(data);	
+				slugs.push(block.slug);
+			}
 		}
+		let returnResult = {};
 
-		return res;
+		for(let feed of res){
+			for(let key in feed){
+				returnResult[key] = feed[key];
+			}
+		}
+		returnResult.exect = document.querySelector(this.searchtype).checked
+
+		this.clear();
+		return returnResult;
 	}
 }
 class FilterEditionBlock{
@@ -246,11 +320,16 @@ class FilterEditionBlock{
 			return {
 				tag: findTag(this.el, 'SELECT').value
 			}
-		}else if (this.type == 'input' || this.type == 'checkbox' || this.type == 'date'){
-			return{
-				tag: this.slug,
-				value: findTag(this.el, 'INPUT').value
-			}
+		}else if (this.type == 'input'  || this.type == 'date'){
+			let result = {};
+			
+			result[this.slug] = findTag(this.el, 'INPUT').value;
+			return result;
+		}else if(this.type == 'checkbox'){
+			let result = {};
+			
+			result[this.slug] = findTag(this.el, 'INPUT').checked;
+			return result;
 		}
 	}
 }
@@ -260,7 +339,210 @@ class Filter{
       		if (config.hasOwnProperty(key)) {
         		this[key] = config[key];
       		}
-    	}
+		}
+		this.deletingFuncs = [];
+	}
+	getHTML(id){
+		this.selector = '#filter_'+id;
+		this.id = id;
+
+		return `
+				<div class="filter" id="filter_${id}">
+					<h4 class="filter-title">${translateTagToText(this.tag)} Фільтр №${id}</h4>
+					<button class="btn filter-close">
+						<img src="img/times.svg" alt="close">
+					</button>
+				</div>
+			`;		
+	}
+	subscribe(type, func){
+		if(type == 'deleting'){
+			this.deletingFuncs.push(func)
+		}
+	}
+	setEllement(el){
+		this.el = el;
+		this.closeBtn = findTag(this.el, 'BUTTON').addEventListener('click', e => {
+			console.log('asd');
+		})
+	}
+	rebind(){
+		this.el = document.querySelector(this.selector);
+		if(this.el !== null){
+			this.closeBtn = findTag(this.el, 'BUTTON').addEventListener('click', e => {
+				this.el.remove();
+				for(let func of this.deletingFuncs){func(this.id)}
+			})
+		}
+	}
+	getSQL(exact = this.exect){
+		
+		let sql = '';
+		switch(this.tag){
+			case 'surname':
+			case 'model':
+			case 'phone_num':
+			case 'broke':
+			case 'master':
+				if(this.method){
+					if(!exact){
+						sql = '`'+this.tag+'` LIKE "%'+this.value+'%" ORDER BY `id` DESC'
+					}else{
+						sql = '`'+this.tag+'` = "'+this.value+'" ORDER BY `id` DESC'
+					}
+				}else{
+					if(!exact){
+						sql = '`'+this.tag+'` LIKE "%'+this.value+'%"'
+					}else{
+						sql = '`'+this.tag+'` = "'+this.value+'"'
+					}
+				}
+					
+			break;
+			case 'id':
+				if(this.method){
+					if(!exact){
+						sql = '`id_publick` LIKE "%'+this.value+'%" ORDER BY `id` DESC'
+					}else{
+						sql = '`id_publick` = "'+this.value+'" ORDER BY `id` DESC'
+					}
+				}else{
+					if(!exact){
+						sql = '`id_publick` LIKE "%'+this.value+'%"'
+					}else{
+						sql = '`id_publick` = "'+this.value+'"'
+					}
+				}
+				break;
+			case 'date':
+					let fromSplited = this.from.split(':');
+					let toSplited = this.to.split(':');
+
+					let from = {
+						day : fromSplited[0],
+						mouth : fromSplited[1],
+						year : fromSplited[2],
+					}
+					let to = {
+						day : toSplited[0],
+						mouth : toSplited[1],
+						year : toSplited[2],
+					}
+
+					let yearDelay = to.year - from.year;
+					let mouthDelay = to.mouth - from.mouth + 12*yearDelay;
+					let dayDelay = to.day - from.day + 31*mouthDelay;
+					
+					let mouth = parseInt(from.mouth) % 12;
+					let year  = parseInt(from.year);
+
+					let displayDay = '';
+					let displayMouth = '';
+					
+					for (let g = 0; g <= dayDelay; g++) {
+						let day = (parseInt(from.day) + g) % 31;
+						if(day == 0) {
+							day = 31;
+						}
+						if(day == 1){
+							mouth++;
+							if(mouth == 13){
+								mouth = 1;
+								year++;
+							}
+						}
+						
+						mouth.toString().length < 2 ? displayMouth = "0"+mouth.toString() : displayMouth = mouth.toString();
+						day.toString().length < 2 ? displayDay = "0"+day.toString() : displayDay = day.toString();
+						
+						sql +=	' `'+this.tag+'` = "'+displayDay+':'+displayMouth+':'+year.toString()+'" OR';
+
+
+					}
+
+					
+					if(this.method){
+						return sql.substr(0, sql.length-2)+'ORDER BY `id` DESC ';
+					}else{
+						return sql.substr(0, sql.length-2);
+					}
+			break;
+			case 'price':
+				if(this.method){
+					sql = '`price_our` BETWEEN "'+this.from+'" AND "'+this.to+'" ORDER BY `id` DESC';
+				}else{
+					sql = '`price_our` BETWEEN "'+this.from+'" AND "'+this.to+'" ';
+				}
+			break;
+		}
+		return sql+' ';
+	}
+}
+class FilterPannel{
+	constructor(config){
+		for (var key in config) {
+      		if (config.hasOwnProperty(key)) {
+        		this[key] = config[key];
+      		}
+		}
+		this.el = document.querySelector(this.selector);
+		this.filters = [];
+		this.counter = 0;
+	}
+	append(filter){
+		this.counter++;
+		filter.subscribe('deleting', id => {
+			console.log(id);
+			
+			for(let filterID in this.filters){
+				if(this.filters[filterID].id == id){
+					this.deleted();
+					this.filters[filterID] = null;
+				}
+			}
+		})
+		this.filters.push(filter);
+		this.el.innerHTML += filter.getHTML(this.counter);
+		
+		for(let filter of this.filters){
+			if(filter !== null){
+				filter.rebind();
+			}
+		}
+	}
+	deleted(){}
+	getSQL(){
+		
+		let sql = 'SELECT `id_publick`, `surname`, `model`, `phone_num`, `broke`, `master`, `date`, `price_our` FROM `remonts` WHERE   ';
+		for (let filter of this.filters){
+			if(filter !== null){
+				sql += '('+filter.getSQL()+') AND ';
+			}
+		}
+		
+		return sql.replace('ORDER BY `id` DESC', '') == sql ? sql.substr(0, sql.length-4): sql.replace('ORDER BY `id` DESC', '').substr(0, sql.replace('ORDER BY `id` DESC', '').length-4)+" ORDER BY `id` DESC";
+	}
+}
+class MainFeed{
+	constructor(config){
+		for (var key in config) {
+      		if (config.hasOwnProperty(key)) {
+        		this[key] = config[key];
+      		}
+		}
+		this.el = document.querySelector(this.selector);
+	}
+	load(sql){
+		console.log(sql);
+		
+		$.ajax({
+			url: 'php/requsts/loadmainfeed.php',
+			data: 'sql='+sql,
+			type: 'POST',
+			success: e =>{
+				this.el.innerHTML = e;
+			}
+		})
 	}
 }
 
@@ -269,5 +551,11 @@ const report = new Main({
 		filter_wrapper: '.header-filters-pannel',
 		submiter: 		'.addfilter',
 		searchtype:		'.allarm_of_search_type_submit'
+	}),
+	fillterpannel: new FilterPannel({
+		selector: '.filter-container'
+	}),
+	mainfeed: new MainFeed({
+		selector: '.main-container'
 	})
 })
