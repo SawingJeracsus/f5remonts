@@ -14,6 +14,7 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
   	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Звіти</title>
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link  href="datepicker/dist/datepicker.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/report.css">
 </head>
 <body>
@@ -22,47 +23,6 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 		<div class="container">
 			<div class="header-content-wrapper">
 				<div class="header-filters-pannel">
-
-				<!-- <div class="filter_block">
-					<h1 class="filter-block-title">
-						Сортувати за:
-					</h1>
-					<div class="filter-block-input-wrapper">
-						<select name="sort_type" class="filter-block-input">
-							<option value="id">ID</option>
-							<option value="surname">Прізвище</option>
-						 	<option value="surname">Модель</option>	
-							<option value="surname">Номер телефону</option>	
-							<option value="surname">Несправність</option>	
-							<option value="surname">Майстер</option>	
-							<option value="surname">Дата</option>	
-							<option value="surname">Ціна</option>	 
-						</select>
-					</div>
-				</div> -->
-				<!-- <div class="filter_block">
-					<h1 class="filter-block-title">
-						З:
-					</h1>
-					<div class="filter-block-input-wrapper">
-						<input type="text" placeholder="З..." class="filter-block-input">
-						<button class="btn priamary filter-block-input-button">
-							<img src="img/calendar.svg" alt="calendar">
-						</button>
-					</div>
-				</div>
-				<div class="filter_block">
-					<h1 class="filter-block-title">
-						По:
-					</h1>
-					<div class="filter-block-input-wrapper">
-						<input type="text" placeholder="По..." class="filter-block-input">
-						<button class="btn priamary filter-block-input-button">
-							<img src="img/calendar.svg" alt="calendar">
-						</button>
-					</div>
-				</div> -->
-				
 
 			</div>
 			<div class="header-btn-group">
@@ -80,18 +40,6 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 	</header>
 	<section class="filter-section light">
 		<div class="filter-container container">
-			<!-- <div class="filter">
-				<h4 class="filter-title">Фільтр по даті №1</h4>
-				<button class="btn filter-close">
-					<img src="img/times.svg" alt="close">
-				</button>
-			</div>
-			<div class="filter">
-				<h4 class="filter-title">Фільтр по даті №2</h4>
-				<button class="btn filter-close">
-					<img src="img/times.svg" alt="close">
-				</button>
-			</div> -->
 		</div>
 	</section>
 
@@ -109,16 +57,6 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 	</section>
 	<main class="main-feed">
 		<div class="main-container container">
-			<!-- <div class="main-feed-item">
-					<div class="id col">102221</div>		
-					<div class="col item-info-block">Прізвище</div>
-					<div class="col item-info-block">Модель</div>
-					<div class="col item-info-block">Номер</div>
-					<div class="col item-info-block">Несправність</div>
-					<div class="col item-info-block">Майстер</div>
-					<div class="col item-info-block">Дата</div>
-					<div class="col item-info-block">Ціна</div>
-			</div> -->
 			
 		</div>
 	</main>
@@ -128,22 +66,52 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 				Загальна статистика:
 			</div>
 			<div class="col"></div>
-			<div class="col stats-block">
+			<button class="btn col stats-block">
 				Cтатистика Моделі
-			</div>
+			</button>
 			<div class="col"></div>
-			<div class="col stats-block">
+			<button class="btn col stats-block">
 				Cтатистика Поломок
-			</div>
-			<div class="col stats-block">
-				Cтатистика Майтрів
-			</div>
-			<div class="col stats-block">
+			</button>
+			<button class="btn col stats-block">
+				Cтатистика Майcтрів
+			</button>
+			<button class="btn col stats-block">
 				Cтатистика Дат
-			</div>
+			</button>
 			<div class="col"></div>
-		</div>
+		</div> 
 	</footer>
+								
+	<div class="modal fc hidden">
+		<div class="modal_container">
+			<div class="modal-header">
+				<h1 class="modal-title">Статистика Чогось там</h1>							
+				<button class="btn modal-close-btn"><img src="img/times.svg" alt="close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="modal-col">
+					<div class="stats">
+						Найчастіше значення: фів <br>
+						Найчастіше значення: фів <br>
+						Найчастіше значення: фів
+					</div>
+					<div class="modal-input-wrapper">
+						<h3 class="modal-input-title">Отримати статистику за:</h3>
+						<input type="text" placeholder = "Введыть значення...">	
+						<button class="btn priamary">
+							Вперед
+						</button>	
+					</div>
+				</div>
+				<div class="modal-col">
+					
+				</div>
+			</div>
+		</div>
+		<div class="dark_filter"></div>
+	</div>
+
 	</div>
 	<script src="js/jquery-3.5.1.min.js"></script>
   	<script src="datepicker/dist/datepicker.js"></script>

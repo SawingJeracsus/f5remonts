@@ -198,13 +198,9 @@ class FilterAddPannel{
 					</div>
 				</div>
 			`;
-			// $('#'+id).datepicker({
-			//   format: 'dd:mm:yyyy',
-			//   days: ['Неділля', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П`ятниця', 'Субота'],
-			//   daysShort: ['Нед','Пон','Вів','Сер','Чет','П`ят','Суб'],
-			//   daysMin:   ['Нед','Пон','Вів','Сер','Чет','П`ят','Суб'],
-			//   months:    ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень','Жовтень', 'Листопад', 'Груденьв']  
-			// });
+			// console.log($('#'+id+' input'));
+			
+			
 		}
 
 
@@ -281,6 +277,17 @@ class FilterEditionBlock{
 				for(let func of this.change_sort_type_funcs){ func(e.target.value) }
 				this.select.value = e.target.value;
 			})
+		}
+		
+		if(this.type == 'date'){
+
+			$(this.el_selector+' input').datepicker({
+				format: 'dd:mm:yyyy',
+				days: ['Неділля', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П`ятниця', 'Субота'],
+				daysShort: ['Нед','Пон','Вів','Сер','Чет','П`ят','Суб'],
+				daysMin:   ['Нед','Пон','Вів','Сер','Чет','П`ят','Суб'],
+				months:    ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень','Жовтень', 'Листопад', 'Груденьв']  
+			  });
 		}
 	}
 	findSelectTag(el){
@@ -496,8 +503,8 @@ class FilterPannel{
 			
 			for(let filterID in this.filters){
 				if(this.filters[filterID].id == id){
-					this.deleted();
 					this.filters[filterID] = null;
+					this.deleted();
 				}
 			}
 		})

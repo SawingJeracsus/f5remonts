@@ -33,6 +33,9 @@ html, body, .content-wrapper { width: 100%; height: 100%; }
 .light{
 	background-color: #80CBC4;
 }
+.hidden{
+	display: none;
+}
 .fc{
 	display: -webkit-flex;
 	display: -moz-flex;
@@ -287,4 +290,62 @@ footer{
 .filter-block-checkbox{
 	border: none;
 	margin-left: 10px;
+}
+
+/* MODAL */
+.modal{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+
+}
+.dark_filter{
+	background-color: rgba(0,0,0,0.5);
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+.modal_container{
+	width: 766px;
+	height: 537px;
+	background-color: #fff;
+	border-radius: 27px;
+	padding: 24px 29px;		
+}
+.modal-header{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.modal-close-btn{
+	background: transparent;
+	width: 34px;
+	height: 34px;
+}
+.modal-body{
+	width: 100%;
+	height: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.modal-col{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: column;
+}
+.modal-input-wrapper{
+	display: flex;
+	flex-direction: column;
+	
 }
