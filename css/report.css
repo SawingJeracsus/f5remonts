@@ -343,9 +343,29 @@ footer{
 	justify-content: space-around;
 	align-items: center;
 	flex-direction: column;
+	position: relative;
+
 }
 .modal-input-wrapper{
 	display: flex;
 	flex-direction: column;
-	
+}
+.modal-input, .modal-submit{
+	height: 33px;
+	width: 292px;
+	margin-top: 4px;
+}
+.modal-input{
+	border: none;
+	background-color: #eee;
+}
+.left-line::after{
+	content: '';
+	position: absolute;
+	top: 10%;
+	left: 0;
+	width: 2px;
+	height: 80%;
+	display: block;
+	background-color: #26A69A;
 }

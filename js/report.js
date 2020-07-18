@@ -66,6 +66,32 @@ class Main{
 				this.mainfeed.load(this.fillterpannel.getSQL())
 			}
 
+			this.components.model.subscribe('show', e => {
+				$.ajax({
+					url: 'php/requsts/getModelStats.php',
+					success: data => {
+						this.components.model.initChart(JSON.parse(data));
+					}
+				})
+			})
+			this.components.broke.subscribe('show', e => {
+				$.ajax({
+					url: 'php/requsts/getBrokeStats.php',
+					success: data => {
+						this.components.broke.initChart(JSON.parse(data));
+					}
+				})
+			})
+
+			this.components.master.subscribe('show', e => {
+				$.ajax({
+					url: 'php/requsts/getMasterStats.php',
+					success: data => {
+						this.components.broke.initChart(JSON.parse(data));
+					}
+				})
+			})
+
 	}
 
 }
@@ -552,6 +578,98 @@ class MainFeed{
 		})
 	}
 }
+class Component{
+	constructor(config){
+		for (var key in config) {
+      		if (config.hasOwnProperty(key)) {
+        		this[key] = config[key];
+      		}
+		}
+		this.el = document.querySelector(this.selector);
+		this.subscribedFuncs = {};
+		// this.submitter = findTag(this.el, 'BUTTON');
+		this.closeBtn = document.querySelector(this.selector+' .modal-close-btn');
+		this.submitter = document.querySelector(this.selector+' .modal-submit');
+		
+		this.input = findTag(this.el, 'INPUT');
+		this.statsEl = document.querySelector(this.selector+' .stats');	
+
+		this.ctx = document.querySelector(this.selector + ' ' + this.canvas).getContext('2d');
+		this.target = document.querySelector(this.target_selector);
+		
+	
+		this.target.addEventListener('click', e =>{
+			if(this.subscribedFuncs.hasOwnProperty('show')){
+				for(let func of this.subscribedFuncs['show']){
+					func(e)
+				}
+			}
+			this.show();
+		})
+
+		this.closeBtn.addEventListener('click', e =>{
+			if(this.subscribedFuncs.hasOwnProperty('hide')){
+				for(let func of this.subscribedFuncs['hide']){
+					func(e)
+				}
+			}
+			this.hide();
+		})
+	}
+	show(){
+		this.el.classList.remove('hidden');
+	}
+	hide(){
+		this.el.classList.add('hidden');
+	}
+	subscribe(type, func){
+		if(this.subscribedFuncs.hasOwnProperty(type)){
+			this.subscribedFuncs[type].push(func)
+		}else{
+			this.subscribedFuncs[type] = [];
+			this.subscribe(type, func); 
+		}
+	}
+	initChart(data){
+		console.log(data);
+		this.chart = new Chart(this.ctx, {
+			type: 'bar',
+			data: {
+				labels: data.labels,
+				datasets: [{
+					label: 'Model Recived by all time',
+					data: data.data,
+					backgroundColor: [
+						'rgba(255, 99, 132, 0.2)',
+						'rgba(54, 162, 235, 0.2)',
+						'rgba(255, 206, 86, 0.2)',
+						'rgba(75, 192, 192, 0.2)',
+						'rgba(153, 102, 255, 0.2)',
+						'rgba(255, 159, 64, 0.2)'
+					],
+					borderColor: [
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		})
+	}
+}
 
 const report = new Main({
 	filteradd: new FilterAddPannel({
@@ -564,5 +682,23 @@ const report = new Main({
 	}),
 	mainfeed: new MainFeed({
 		selector: '.main-container'
-	})
+	}),
+	components: {
+		model: new Component({
+			selector: '.model-modal',
+			canvas:   '.modalchart',
+			target_selector: '.model-stats-block'
+		}),
+		broke: new Component({
+			selector: '.broke-modal',
+			canvas:   '.brokechart',
+			target_selector: '.broke-stats-block'
+		}),
+		master: new Component({
+			selector: '.master-modal',
+			canvas:   '.masterchart',
+			target_selector: '.master-stats-block'
+		}),
+	}
 })
+
