@@ -77,9 +77,7 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 			<button class="btn col stats-block master-stats-block">
 				Cтатистика Майcтрів
 			</button>
-			<button class="btn col stats-block">
-				Cтатистика Дат
-			</button>
+			<div class="col"></div>
 			<div class="col"></div>
 		</div> 
 	</footer>
@@ -92,14 +90,10 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 			</div>
 			<div class="modal-body">
 				<div class="modal-col">
-					<div class="stats">
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів
-					</div>
+					
 					<div class="modal-input-wrapper">
 						<h3 class="modal-input-title">Отримати статистику за:</h3>
-						<input class ="modal-input" type="text" placeholder = "Введыть значення...">	
+						<input class ="modal-input" type="text" placeholder = "Введіть значення...">	
 						<button class="btn priamary modal-submit">
 							Вперед
 						</button>	
@@ -121,14 +115,10 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 			</div>
 			<div class="modal-body">
 				<div class="modal-col">
-					<div class="stats">
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів
-					</div>
+					
 					<div class="modal-input-wrapper">
 						<h3 class="modal-input-title">Отримати статистику за:</h3>
-						<input class ="modal-input" type="text" placeholder = "Введыть значення...">	
+						<input class ="modal-input" type="text" placeholder = "Введіть значення...">	
 						<button class="btn priamary modal-submit">
 							Вперед
 						</button>	
@@ -150,14 +140,10 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 			</div>
 			<div class="modal-body">
 				<div class="modal-col">
-					<div class="stats">
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів <br>
-						Найчастіше значення: фів
-					</div>
+					
 					<div class="modal-input-wrapper">
 						<h3 class="modal-input-title">Отримати статистику за:</h3>
-						<input class ="modal-input" type="text" placeholder = "Введыть значення...">	
+						<input class ="modal-input" type="text" placeholder = "Введіть значення...">	
 						<button class="btn priamary modal-submit">
 							Вперед
 						</button>	
@@ -170,6 +156,9 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
 		</div>
 		<div class="dark_filter"></div>
 	</div>
+
+
+
 
 
 	</div>

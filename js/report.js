@@ -74,6 +74,17 @@ class Main{
 					}
 				})
 			})
+			this.components.model.subscribe('submit', (value, e) => {
+				$.ajax({
+					url: 'php/requsts/getModelStats.php',
+					type: 'POST',
+					data: 'val='+value,
+					success: data => {
+						this.components.model.initChart(JSON.parse(data));						
+					}
+				})
+			})
+
 			this.components.broke.subscribe('show', e => {
 				$.ajax({
 					url: 'php/requsts/getBrokeStats.php',
@@ -83,11 +94,33 @@ class Main{
 				})
 			})
 
+			this.components.broke.subscribe('submit', (value, e) => {
+				$.ajax({
+					url: 'php/requsts/getBrokeStats.php',
+					type: 'POST',
+					data: 'val='+value,
+					success: data => {
+						this.components.broke.initChart(JSON.parse(data));						
+					}
+				})
+			})
+
 			this.components.master.subscribe('show', e => {
 				$.ajax({
 					url: 'php/requsts/getMasterStats.php',
 					success: data => {
-						this.components.broke.initChart(JSON.parse(data));
+						this.components.master.initChart(JSON.parse(data));
+					}
+				})
+			})
+
+			this.components.master.subscribe('submit', (value, e) => {
+				$.ajax({
+					url: 'php/requsts/getMasterStats.php',
+					type: 'POST',
+					data: 'val='+value,
+					success: data => {
+						this.components.master.initChart(JSON.parse(data));						
 					}
 				})
 			})
@@ -592,12 +625,22 @@ class Component{
 		this.submitter = document.querySelector(this.selector+' .modal-submit');
 		
 		this.input = findTag(this.el, 'INPUT');
-		this.statsEl = document.querySelector(this.selector+' .stats');	
+		// this.statsEl = document.querySelector(this.selector+' .stats');	
 
 		this.ctx = document.querySelector(this.selector + ' ' + this.canvas).getContext('2d');
 		this.target = document.querySelector(this.target_selector);
 		
-	
+		this.submitter.addEventListener('click', e => {
+			// let data = this.input.value;
+
+			if(this.subscribedFuncs.hasOwnProperty('submit')){
+				for(let func of this.subscribedFuncs['submit']){
+					func(this.input.value, e)
+				}
+			}
+			this.input.value = '';
+
+		})
 		this.target.addEventListener('click', e =>{
 			if(this.subscribedFuncs.hasOwnProperty('show')){
 				for(let func of this.subscribedFuncs['show']){
@@ -631,13 +674,14 @@ class Component{
 		}
 	}
 	initChart(data){
-		console.log(data);
+		if(this.chart !== undefined) this.chart.destroy();
+
 		this.chart = new Chart(this.ctx, {
 			type: 'bar',
 			data: {
 				labels: data.labels,
 				datasets: [{
-					label: 'Model Recived by all time',
+					label: 'By all time',
 					data: data.data,
 					backgroundColor: [
 						'rgba(255, 99, 132, 0.2)',
