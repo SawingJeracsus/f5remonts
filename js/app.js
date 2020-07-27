@@ -72,6 +72,9 @@ class Main {
       }
     }
     this.printerEL = false;
+    this.instruments.toggle_menu.init = e => {
+      this.menu.classList.toggle('opened');
+    }
     window.onbeforeprint = () => {
       document.querySelector('main').classList.add('hidden');
       document.querySelector('header').classList.add('hidden');
@@ -179,8 +182,21 @@ class Main {
       $.ajax({
         url: 'php/requsts/last.php',
         success: e => {
-          this.search.el.value = e;
-          this.search.input(null, e);
+          let data = JSON.parse(e);
+
+          this.search.el.value = data.id_publick;
+          this.search.input(null, data.id_publick);
+
+          this.editor.load(data.id)
+
+          if(pageWidth <= 800){
+            this.editor.el.parentElement.classList.remove('hidden');
+            this.editor.el.parentElement.classList.add('mobile');
+            this.instruments.back.el.classList.remove('hidden');
+            this.feed.wrapper.classList.add('hidden');
+
+
+          }
         }
       })
     }
@@ -414,6 +430,7 @@ const main = new Main({
   feed:              new Feed('.feed', '.main-feed'),
   editor:            new Editor('.editing-form', 'form-item'),
   history:           new HistoryBlock('.history-body', '.history_wrapper'),
+  menu:              document.querySelector('.admin-instruments-menu'),  
   instruments: {
     addnew:          new Button('.addnew'),
     addstory:        new Button('.add-story-item'),
@@ -427,7 +444,8 @@ const main = new Main({
     call:            new Button('.call'),
     viber:           new Button('.viber'),
     master_coppy:    new Button('.master_coppy'),
-    last:            new Button('.last')
+    last:            new Button('.last'),
+    toggle_menu:     new Button('.menu-togle')
   },
   components: {
     addnewform:      new Component('.addnew_form_wrapper', '.addnew_form'),

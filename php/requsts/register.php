@@ -1,5 +1,5 @@
 <?php 
-require '../db/db.php';
+require '../db/dbUnProtected.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -99,7 +99,7 @@ $mail->isHTML(true);                                  // Set email format to HTM
 		]);	
 		die;
 	}
-      $mail->send();
+    //   $mail->send();
 	echo json_encode([
 			'message' => $sitelink,
 			'type'	  => 'success'

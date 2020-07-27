@@ -1,10 +1,6 @@
 <?php 
 require 'php/db/db.php';
-session_start();
 
-if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
-   header('Location: login.php');
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,6 +55,21 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
         <div class="form-item">
           <div class="form-title">Майстер</div>
           <input type="text" name="master" placeholder="Майстер...">
+
+          <?php
+          
+          /*
+          <?php  $masters = R::getAll('SELECT * FROM `masters`');?>
+          <!-- <input type="text" name="master" placeholder="Майстер..."> -->
+          <select name="master">
+          <option value=""> </option>
+          <?php foreach($masters as $master): ?>
+          <option value="<?= $master['name']?>"><?= $master['name']?></option>
+          <?php endforeach;?>
+          </select>
+          */
+          ?>
+          
         </div>
         <div class="form-item">
           <div class="form-title">IMEI</div>
@@ -140,7 +151,15 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
         <input type="text" name="model" placeholder="Модель...">
         <input type="text" name="phone_num" placeholder="Номер телефону...">
         <input type="text" name="broke" placeholder="Несправність...">
-        <input type="text" name ="master" placeholder="Майcтер...">
+        <?php  $masters = R::getAll('SELECT * FROM `masters`');?>
+          <!-- <input type="text" name="master" placeholder="Майстер..."> -->
+          <select name="master">
+          <option value=""> </option>
+          <?php foreach($masters as $master): ?>
+          <option value="<?= $master['name']?>"><?= $master['name']?></option>
+          <?php endforeach;?>
+          </select>
+        <!-- <input type="text" name ="master" placeholder="Майcтер..."> -->
       </div>
       <button class="btn primary fc addnewsave">Зберегти</button>
     </form>
@@ -171,7 +190,12 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
     <button class="btn instrument back">Назад</button>
     Designed by <a href="https://www.instagram.com/andriypol68/">Andriy Polishchuck</a>
   </footer>
-  <a href="report.php" class="report abtn">Звіт</a>
+  <div class="admin-instruments-menu">
+    <button class="btn menu-togle"><img src="img/bars.svg"></button>
+    <a href="report.php" class="report abtn primary">Звіт</a>
+    <a href="useractivation.php" class="report abtn primary small-text">Активація користувачів</a>
+    <a href="mastecontroll.php" class="report abtn primary small-text">Реєстрація нового майстра</a>
+  </div>
   <script src = "js/qrcode.min.js"></script>
   <script src="js/jquery-3.5.1.min.js"></script>
   <script src="datepicker/dist/datepicker.js"></script>

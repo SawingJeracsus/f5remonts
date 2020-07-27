@@ -1,6 +1,6 @@
 <?php 
 // print_r($_POST);
-require '../db/db.php';
+require '../db/dbUnProtected.php';
 session_start();
 
 $errors = [];

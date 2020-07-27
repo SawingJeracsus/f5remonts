@@ -1,10 +1,6 @@
 <?php 
 require 'php/db/db.php';
-session_start();
 
-if(!isset($_SESSION['user']) || $_SESSION['user']['activated'] == '0'){
-   header('Location: login.php');
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">

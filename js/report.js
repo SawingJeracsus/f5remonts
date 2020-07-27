@@ -499,7 +499,7 @@ class Filter{
 					let mouthDelay = to.mouth - from.mouth + 12*yearDelay;
 					let dayDelay = to.day - from.day + 31*mouthDelay;
 					
-					let mouth = parseInt(from.mouth) % 12;
+					let mouth = parseInt(from.mouth) % 12 - 1;
 					let year  = parseInt(from.year);
 
 					let displayDay = '';
@@ -599,7 +599,6 @@ class MainFeed{
 		this.el = document.querySelector(this.selector);
 	}
 	load(sql){
-		console.log(sql);
 		
 		$.ajax({
 			url: 'php/requsts/loadmainfeed.php',

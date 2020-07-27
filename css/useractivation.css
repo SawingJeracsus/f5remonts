@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+main{
+    background-color: #eee;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container{
+    background-color: #fff;
+    min-width: 70vw;
+    padding: 5px;
+    border-radius: 4px;
+}
+.users_list{
+    list-style: none;
+}
+.user{
+    background-color: #eee;
+    margin: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 25px;
+}
+.name, .email{
+    font-size: 24px;
+    margin-left: 25px;    
+}
+.activated input[type="checkbox"]{
+    display: none;
+}
+.checkbox-div{
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: #f00;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type="checkbox"]:checked ~ .checkbox-div{
+    background-color: #4CAF50;
+}
