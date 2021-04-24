@@ -10,8 +10,8 @@ $actual_link_parrent = "http://$_SERVER[HTTP_HOST]";
 
 $_SMPT = [
     'host' => 'smtp.gmail.com',
-    'username' => 'smurffrums18@gmail.com',
-    'password' => '!2qazwsx',
+    'username' => 'email',
+    'password' => 'pass',
     'port' => 587
   ];
 
